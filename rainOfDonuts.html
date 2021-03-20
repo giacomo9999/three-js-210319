@@ -16,18 +16,41 @@
   let scene, camera, renderer, donut;
   let ADD = 0.1;
 
-  const donutArr = [];
+  const randomInRange = (from, to) => {
+    let x = Math.random() * (to - from);
+    return x + from;
+  };
+
+  let donutArr = [];
+
+  const cullDonutArr = (oldArr = []) => {
+    const newArr = [];
+    oldArr.forEach((donut) => {
+      if (Math.trunc(donut.position.y) >= -3) {
+        newArr.push(donut);
+      } else {
+        console.log("Removing a donut...", donut.uuid);
+        console.log("Number of donuts: ", oldArr.length - 1);
+        scene.remove(scene.getObjectByName(donut.uuid));
+      }
+    });
+    return newArr;
+  };
+
   const createDonut = () => {
     let geometry = new THREE.TorusGeometry(0.25, 0.125, 10, 30);
     let material = new THREE.MeshBasicMaterial({
-      color: "#E91E63",
+      color: Math.random() * 0xffffff,
       wireframe: true,
     });
     donut = new THREE.Mesh(geometry, material);
     scene.add(donut);
-    donut.position.y = 2;
+    donut.position.x = randomInRange(-1.5, 1.5);
+    donut.position.z = randomInRange(-10, 5);
+    donut.position.y = 4;
     donut.scale.set(0.5, 0.5, 0.5);
-    console.log("Donut created...", donut);
+    donutArr.push(donut);
+    console.log("Donut created...", donut.uuid);
   };
 
   let init = () => {
@@ -42,17 +65,23 @@
     );
     camera.position.z = 5;
 
-    createDonut();
-
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerHeight - 50, window.innerWidth - 50);
     document.body.appendChild(renderer.domElement);
   };
 
   let mainLoop = () => {
-    console.log("Initializing...");
-    donut.rotation.y += ADD;
-    donut.position.y -= ADD/3;
+    // console.log("Rendering...");
+    if (Math.random() < 0.01) {
+      createDonut();
+    }
+    donutArr = cullDonutArr(donutArr);
+    // console.log("Total donuts: ", donutArr.length);
+    donutArr.forEach((donut) => {
+      donut.rotation.y += ADD;
+      donut.position.y -= ADD / 3;
+    });
+
     renderer.render(scene, camera);
     requestAnimationFrame(mainLoop);
   };

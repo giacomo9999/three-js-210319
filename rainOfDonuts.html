@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rain Of Donuts</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="three.min.js"></script>
+  </head>
+  <body>
+    <button type="button" onclick="mainLoop()">Start</button>
+  </body>
+</html>
+<script>
+  let scene, camera, renderer, donut;
+  let ADD = 0.1;
+
+  const donutArr = [];
+  const createDonut = () => {
+    let geometry = new THREE.TorusGeometry(0.25, 0.125, 10, 30);
+    let material = new THREE.MeshBasicMaterial({
+      color: "#E91E63",
+      wireframe: true,
+    });
+    donut = new THREE.Mesh(geometry, material);
+    scene.add(donut);
+    donut.position.y = 2;
+    donut.scale.set(0.5, 0.5, 0.5);
+    console.log("Donut created...", donut);
+  };
+
+  let init = () => {
+    console.log("Initializing...");
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color("black");
+    camera = new THREE.PerspectiveCamera(
+      30,
+      window.innerWidth / window.innerHeight,
+      1,
+      1000
+    );
+    camera.position.z = 5;
+
+    createDonut();
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerHeight - 50, window.innerWidth - 50);
+    document.body.appendChild(renderer.domElement);
+  };
+
+  let mainLoop = () => {
+    console.log("Initializing...");
+    donut.rotation.y += ADD;
+    donut.position.y -= ADD/3;
+    renderer.render(scene, camera);
+    requestAnimationFrame(mainLoop);
+  };
+  init();
+  //   mainLoop();
+</script>

@@ -8,14 +8,35 @@
     <link rel="stylesheet" href="style.css" />
     <script src="three.min.js"></script>
   </head>
-  <body></body>
+  <body>
+    <button type="button" onclick="mainLoop()">Start</button>
+  </body>
 </html>
 <script>
-  let scene, camera, renderer;
-  let init = function () {
+  let scene, camera, renderer, cube, sphere;
+  let ADD = 0.1;
+
+  let createCube = () => {
+    let geometry = new THREE.BoxGeometry(1, 1, 1);
+    let material = new THREE.MeshBasicMaterial({ color: "#FF6A3D" });
+    cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+  };
+
+  let createSphere = () => {
+    let geometry = new THREE.SphereGeometry(0.5, 30, 30, 0, Math.PI);
+    let material = new THREE.MeshBasicMaterial({
+      color: "#F4DB7D",
+      wireframe: true,
+    });
+    sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+  };
+
+  let init = () => {
     console.log("Initializing...");
     scene = new THREE.Scene();
-    scene.background = new THREE.Color("blue");
+    scene.background = new THREE.Color("#1A2238");
 
     camera = new THREE.PerspectiveCamera(
       30,
@@ -25,17 +46,34 @@
     );
     camera.position.z = 5;
 
+    // let axes = new THREE.AxesHelper(2);
+    // scene.add(axes);
+
+    // createCube();
+    createSphere();
+
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     document.body.appendChild(renderer.domElement);
   };
 
-  let mainLoop = function () {
+  let mainLoop = () => {
     console.log("Rendering...");
+    sphere.rotation.x += ADD;
+    sphere.rotation.y += ADD;
+    Math.abs(sphere.position.x) >= 3 ? (ADD *= -1) : (ADD *= 1);
+    // cube.position.x += ADD;
+    // cube.rotation.y += ADD;
+    // Math.abs(cube.position.x) >= 3 ? (ADD *= -1) : (ADD *= 1);
     renderer.render(scene, camera);
     requestAnimationFrame(mainLoop);
   };
   init();
   // mainLoop();
 </script>
+
+<!-- periwinkle: #9DAAF2
+navy blue: #1A2238
+vermilion: #1A2238
+khaki yellow: #F4DB7D -->

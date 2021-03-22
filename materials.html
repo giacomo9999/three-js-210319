@@ -28,8 +28,8 @@
     //   transparent: true,
     // });
 
-    const material = new THREE.MeshNormalMaterial();
-    const cubeOut = new THREE.Mesh(geometry, material);
+    const material = new THREE.LineBasicMaterial({ color: "blue", linewidth: 5 });
+    const cubeOut = new THREE.Line(geometry, material);
     cubeOut.position.x = objectData.xPos;
     cubeOut.position.y = objectData.yPos;
     cubeOut.position.z = objectData.zPos;
@@ -50,7 +50,7 @@
     const planeOut = new THREE.Mesh(geometry, material);
     planeOut.rotation.x = objectData.xRot;
     planeOut.position.y = -10;
-    planeOut.position.z = -15;
+    planeOut.position.z = -25;
     return planeOut;
   };
 
@@ -58,7 +58,7 @@
     console.log("Initializing...");
     scene = new THREE.Scene();
     scene.background = new THREE.Color("black");
-    camera = new THREE.PerspectiveCamera(30, 1, 1, 1000);
+    camera = new THREE.PerspectiveCamera(30, 1, 1, 80);
     camera.position.z = 50;
 
     renderer = new THREE.WebGLRenderer();
@@ -80,7 +80,7 @@
     zScale: 5,
     xPos: 3,
     yPos: -5,
-    zPos: -6,
+    zPos: -15,
   });
 
   const cube2 = createCube({
@@ -100,9 +100,7 @@
     xRot: -Math.PI / 2,
   });
   scene.add(cube1);
-
   scene.add(cube2);
-
   scene.add(plane);
   scene.add(new THREE.AxesHelper());
 
